@@ -2,6 +2,13 @@ const express = require('express')
 const app = express()
 //UsersControllers
 const {HomeWeb,LoginWeb,RegisterWeb} = require('../Controllers/UsersControllers')
+//auth
+const UserAuth = require('../auth/Auth')
+//middleware bodyparser
+const bodyparser = require('body-parser')
+app.set(bodyparser.urlencoded({extended: false}))
+app.use(bodyparser.json())
+app.use(express.urlencoded({extended: true}))
 
 //path
 const path = require('path')
@@ -18,7 +25,8 @@ app.get('/login',LoginWeb)
 //registerWeb
 app.get('/register',RegisterWeb)
 
-
+//middleware login logout
+app.use(UserAuth)
 
 
 module.exports = app

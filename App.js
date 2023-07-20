@@ -5,11 +5,16 @@ const port = 3000
 
 
 
+app.get('/', (req,res) => {
+    res.send('hello world')
+})
 
 
 
-
-
+// pembatasan
+app.use('/',(req,res) => {
+    res.status(404).send('404 NOT FOUND')
+})
 
 
 app.listen(port,() => {

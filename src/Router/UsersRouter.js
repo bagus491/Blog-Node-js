@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordUpdate} = require('../Controllers/UsersControllers')
+const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordUpdate,ReadBlog} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //middleware bodyparser
@@ -73,7 +73,8 @@ app.get('/dasbord',DasbordWeb)
 app.get('/dasbord/addpost',DasbordPost)
 // updateposts
 app.get('/dasbord/updatepost/:id',DasbordUpdate)
-
+//readblog
+app.get('/readblog/:id',ReadBlog)
 
 //post
 app.post('/addpost',Upload.single('Avatar'),(req,res) => {

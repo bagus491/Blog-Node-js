@@ -29,7 +29,10 @@ const LoginWeb = (req,res) => {
 //registerweb
 const RegisterWeb =  (req,res) => {
     try{
-        res.send('halaman register')
+       res.render('register', {
+        title: 'halaman/register',
+        layout: 'register.ejs'
+       })
     }catch{
         res.send('gagal')
     }

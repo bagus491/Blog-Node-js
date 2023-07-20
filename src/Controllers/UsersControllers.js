@@ -11,9 +11,25 @@ const HomeWeb = (req,res) => {
     }
 }
 
+//LoginWeb
+const LoginWeb = (req,res) => {
+    try{
+        res.send('halaman login')
+    }catch{
+        res.send('gagal')
+    }
+}
+
+//registerweb
+const RegisterWeb =  (req,res) => {
+    try{
+        res.send('halaman register')
+    }catch{
+        res.send('gagal')
+    }
+}
 
 
 
 
-
-module.exports = {HomeWeb}
+module.exports = {HomeWeb,LoginWeb,RegisterWeb}

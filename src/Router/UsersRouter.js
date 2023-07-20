@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost} = require('../Controllers/UsersControllers')
+const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordUpdate} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //middleware bodyparser
@@ -71,7 +71,8 @@ app.get('/register',RegisterWeb)
 app.get('/dasbord',DasbordWeb)
 //dasbordpost
 app.get('/dasbord/addpost',DasbordPost)
-
+// updateposts
+app.get('/dasbord/updatepost/:id',DasbordUpdate)
 
 
 //post
@@ -96,6 +97,35 @@ app.post('/addpost',Upload.single('Avatar'),(req,res) => {
    }else{
     res.redirect('/login')
    }
+})
+
+//updatepost
+app.put('/updatepost',Upload.single('Avatar'),(req,res) => {
+    const token = req.cookies.token
+    const imageUrl = req.file.path
+    const {Title,Preparagraf,Paragraf,Author} = req.body
+    const DatePosts = new Date()
+    if(token){
+        Posts.updateMany(
+            {
+                _id: req.body._id
+            },
+            {
+                $set: {
+                    Title,
+                    Preparagraf,
+                    Paragraf,
+                    Avatar: imageUrl,
+                    DatePosts,
+                    Author,
+                }
+            }
+        ).then((err,result) => {
+            res.redirect('/dasbord')
+        })
+    }else{
+        res.redirect('/dasbord')
+    }
 })
 
 //delete

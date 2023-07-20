@@ -65,5 +65,19 @@ const DasbordPost = (req,res) => {
     }
 }
 
+//updatepost
+const DasbordUpdate = async (req,res) => {
+    const getPost = await Posts.findOne({_id: req.params.id})
+    try{
+        res.render('updatepost', {
+            title: 'halaman/updateposts',
+            layout: 'updatepost.ejs',
+            getPost
+        })
+    }catch{
+        res.send('gagal')
+    }
+}
 
-module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost}
+
+module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordPost,DasbordUpdate}

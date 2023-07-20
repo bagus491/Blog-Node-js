@@ -7,7 +7,8 @@ const {HomeWeb,LoginWeb,RegisterWeb} = require('../Controllers/UsersControllers'
 const path = require('path')
 app.set('views',path.join(__dirname, '../views'))
 
-
+//public file
+app.use(express.static(path.join(__dirname, '../public')))
 
 //get
 // homeWEB

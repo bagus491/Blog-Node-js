@@ -1,0 +1,13 @@
+$primary-color: #EEEEEE;
+$secondary-color: #A1CCD1;
+
+
+.for-login {
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    .card {
+        background: $primary-color;
+    }
+}

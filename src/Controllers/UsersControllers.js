@@ -17,7 +17,10 @@ const HomeWeb = (req,res) => {
 //LoginWeb
 const LoginWeb = (req,res) => {
     try{
-        res.send('halaman login')
+        res.render('login', {
+            title: 'halaman/login',
+            layout: 'login.ejs'
+        })
     }catch{
         res.send('gagal')
     }

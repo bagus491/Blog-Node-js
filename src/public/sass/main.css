@@ -1,0 +1,9 @@
+.for-login {
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.for-login .card {
+  background: #EEEEEE;
+}/*# sourceMappingURL=main.css.map */

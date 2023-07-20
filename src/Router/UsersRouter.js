@@ -3,6 +3,12 @@ const app = express()
 //UsersControllers
 const {HomeWeb,LoginWeb,RegisterWeb} = require('../Controllers/UsersControllers')
 
+//path
+const path = require('path')
+app.set('views',path.join(__dirname, '../views'))
+
+
+
 //get
 // homeWEB
 app.get('/',HomeWeb)

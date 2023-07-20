@@ -5,6 +5,10 @@ const UsersRouter = require('./src/Router/UsersRouter')
 
 
 
+//middleware view engine
+const mainlayouts = require('express-ejs-layouts')
+app.set('view engine', 'ejs')
+app.use(mainlayouts)
 
 // usersRouter
 app.use(UsersRouter)

@@ -5,9 +5,12 @@
 //homeweb
 const HomeWeb = (req,res) => {
     try{
-        res.send('hello world')
-    }catch{
-        res.send('gagal')
+       res.render('home', {
+        title:'halaman/home',
+        layout: 'main-layouts/main-layouts',
+       })
+}catch(err){
+        console.log(err)
     }
 }
 

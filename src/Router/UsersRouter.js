@@ -53,6 +53,11 @@ app.get('/login',LoginWeb)
 app.get('/register',RegisterWeb)
 //dasbordweb
 app.get('/dasbord',DasbordWeb)
+//logoutweb
+app.get('/logout',(req,res) => {
+    res.clearCookie('token')
+    res.redirect('/login')
+})
 
 //middleware login logout
 app.use(UserAuth)

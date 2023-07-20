@@ -37,6 +37,11 @@ const Posts = require('../model/Posts')
 // kenapa gak ada namanayA? karena ada uploads di dalam databasenye atau req.file.pathnya
 app.use(express.static(path.join(__dirname, '../../')))
 
+
+//middleware method-override
+const methodOverride = require('method-override')
+app.use(methodOverride('_method'))
+
 //middleware token
 app.use('/dasbord',(req,res,next) => {
     const token = req.headers.authorization || req.cookies.token
@@ -93,7 +98,18 @@ app.post('/addpost',Upload.single('Avatar'),(req,res) => {
    }
 })
 
-
+//delete
+app.delete('/dasbord', (req,res) => {
+    const {_id} = req.body
+   try{
+    Posts.deleteOne({_id})
+        .then((err,result) => {
+            res.redirect('/dasbord')
+        })
+   }catch{
+    res.redirect('/dasbord')
+   }
+})
 
 //logoutweb
 app.get('/logout',(req,res) => {

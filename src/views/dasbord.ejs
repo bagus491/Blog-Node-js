@@ -23,7 +23,12 @@
               <h5 class="card-title"><%= e.Title %></h5>
               <p class="card-text"><%= e.Preparagraf %></p>
               <p class="card-text"><%= e.DatePosts %></p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+              <a href="/updatepost/<%= e._id %>" class="btn btn-primary">Update Posts</a>
+              <br><br>
+              <form method="post" action="/dasbord?_method=DELETE">
+                <input type="hidden" value="<%= e._id %>" name="id">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('yakin?')">Delete Posts</button>
+              </form>
             </div>
           </div>
         <% }) %>

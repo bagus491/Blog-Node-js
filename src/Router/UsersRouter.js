@@ -33,6 +33,10 @@ const Upload = multer({dest: 'uploads/'})
 //model POSTS
 const Posts = require('../model/Posts')
 
+//middleware uploads
+// kenapa gak ada namanayA? karena ada uploads di dalam databasenye atau req.file.pathnya
+app.use(express.static(path.join(__dirname, '../../')))
+
 //middleware token
 app.use('/dasbord',(req,res,next) => {
     const token = req.headers.authorization || req.cookies.token

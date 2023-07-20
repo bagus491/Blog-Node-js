@@ -1,4 +1,5 @@
-
+//model POSTS
+const Posts = require('../model/Posts')
 
 
 
@@ -39,11 +40,13 @@ const RegisterWeb =  (req,res) => {
 }
 
 //dasbord
-const DasbordWeb = (req,res) => {
+const DasbordWeb = async (req,res) => {
+    const getPosts = await Posts.find()
     try{
         res.render('dasbord', {
             title: 'halaman/dasbord',
-            layout: 'dasbord.ejs'
+            layout: 'dasbord.ejs',
+            getPosts
         })
     }catch{
         res.send('gagal')
@@ -58,7 +61,7 @@ const DasbordPost = (req,res) => {
             layout: 'addpost.ejs'
         })
     }catch{
-
+        res.send('gagal')
     }
 }
 

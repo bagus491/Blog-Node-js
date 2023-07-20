@@ -4,11 +4,13 @@ const Posts = require('../model/Posts')
 
 
 //homeweb
-const HomeWeb = (req,res) => {
+const HomeWeb = async (req,res) => {
+    const getPost = await Posts.find()
     try{
        res.render('home', {
         title:'halaman/home',
         layout: 'main-layouts/main-layouts',
+        getPost
        })
 }catch(err){
         console.log(err)

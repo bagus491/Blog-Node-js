@@ -17,6 +17,33 @@ app.set('views',path.join(__dirname, '../views'))
 //public file
 app.use(express.static(path.join(__dirname, '../public')))
 
+// middleware penting jika ingin memakai middleware token sebagai pembatasan
+const cookieparser = require('cookie-parser')
+app.use(cookieparser('secret'))
+
+
+// jsonweb token
+const jwt = require('jsonwebtoken')
+const secret = '!@%$DDZAW12456ASC3$^&'
+
+//middleware token
+app.use('/dasbord',(req,res,next) => {
+    const token = req.headers.authorization || req.cookies.token
+    if(token){
+        try{
+            const decoded = jwt.verify(token,secret)
+            req.Username = decoded
+            next()
+        }catch{
+            res.redirect('/login')
+        }
+       
+    }else{
+        res.redirect('/login')
+    }
+})
+
+
 //get
 // homeWEB
 app.get('/',HomeWeb)

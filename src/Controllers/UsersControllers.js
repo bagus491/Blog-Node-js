@@ -50,5 +50,17 @@ const DasbordWeb = (req,res) => {
     }
 }
 
+//dasbordpost 
+const DasbordPost = (req,res) => {
+    try{
+        res.render('addpost', {
+            title: 'halaman/addpost',
+            layout: 'addpost.ejs'
+        })
+    }catch{
 
-module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb}
+    }
+}
+
+
+module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost}

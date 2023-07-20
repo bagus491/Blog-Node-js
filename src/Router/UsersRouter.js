@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb} = require('../Controllers/UsersControllers')
+const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //middleware bodyparser
@@ -25,6 +25,13 @@ app.use(cookieparser('secret'))
 // jsonweb token
 const jwt = require('jsonwebtoken')
 const secret = '!@%$DDZAW12456ASC3$^&'
+
+//multer
+const multer = require('multer')
+const Upload = multer({dest: 'uploads/'})
+
+//model POSTS
+const Posts = require('../model/Posts')
 
 //middleware token
 app.use('/dasbord',(req,res,next) => {
@@ -53,6 +60,37 @@ app.get('/login',LoginWeb)
 app.get('/register',RegisterWeb)
 //dasbordweb
 app.get('/dasbord',DasbordWeb)
+//dasbordpost
+app.get('/dasbord/addpost',DasbordPost)
+
+
+
+//post
+app.post('/addpost',Upload.single('Avatar'),(req,res) => {
+   const token = req.cookies.token
+   const ImageUrl = req.file.path
+   const {Title,Preparagraf,Paragraf,Author} = req.body
+   const DatePosts = new Date()
+   if(token){
+     Posts.insertMany(
+        {
+            Title,
+            Preparagraf,
+            Paragraf,
+            Avatar: ImageUrl,
+            DatePosts,
+            Author,
+        }
+     ).then((err,result)=>{
+        res.redirect('/dasbord')
+     })
+   }else{
+    res.redirect('/login')
+   }
+})
+
+
+
 //logoutweb
 app.get('/logout',(req,res) => {
     res.clearCookie('token')

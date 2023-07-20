@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordUpdate,ReadBlog} = require('../Controllers/UsersControllers')
+const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordUpdate,ReadBlog,GetOneSearch} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //middleware bodyparser
@@ -76,6 +76,9 @@ app.get('/dasbord/updatepost/:id',DasbordUpdate)
 //readblog
 app.get('/readblog/:id',ReadBlog)
 
+// search
+app.get('/searchpost', GetOneSearch)
+
 //post
 app.post('/addpost',Upload.single('Avatar'),(req,res) => {
    const token = req.cookies.token
@@ -99,6 +102,8 @@ app.post('/addpost',Upload.single('Avatar'),(req,res) => {
     res.redirect('/login')
    }
 })
+
+
 
 //updatepost
 app.put('/updatepost',Upload.single('Avatar'),(req,res) => {

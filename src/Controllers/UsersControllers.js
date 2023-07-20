@@ -17,6 +17,25 @@ const HomeWeb = async (req,res) => {
     }
 }
 
+//getoneSearch
+const GetOneSearch = async (req,res) => {
+    const search = req.query.search
+    const getPost = await Posts.findOne({Title: search})
+    if(getPost){
+        try{
+            res.render('homesearch', {
+             title:'halaman/home',
+             layout: 'main-layouts/main-layouts',
+             getPost
+            })
+     }catch(err){
+             console.log(err)
+         }
+    }else{
+        res.redirect('/')
+    }
+}
+
 //readblog
 const ReadBlog = async (req,res) => {
     const getPost = await Posts.findOne({_id: req.params.id})
@@ -96,4 +115,4 @@ const DasbordUpdate = async (req,res) => {
 }
 
 
-module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordPost,DasbordUpdate,ReadBlog}
+module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordPost,DasbordUpdate,ReadBlog,GetOneSearch}

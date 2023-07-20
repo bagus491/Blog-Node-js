@@ -38,7 +38,17 @@ const RegisterWeb =  (req,res) => {
     }
 }
 
+//dasbord
+const DasbordWeb = (req,res) => {
+    try{
+        res.render('dasbord', {
+            title: 'halaman/dasbord',
+            layout: 'dasbord.ejs'
+        })
+    }catch{
+        res.send('gagal')
+    }
+}
 
 
-
-module.exports = {HomeWeb,LoginWeb,RegisterWeb}
+module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb}

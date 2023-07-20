@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWeb,LoginWeb,RegisterWeb} = require('../Controllers/UsersControllers')
+const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //middleware bodyparser
@@ -24,6 +24,8 @@ app.get('/',HomeWeb)
 app.get('/login',LoginWeb)
 //registerWeb
 app.get('/register',RegisterWeb)
+//dasbordweb
+app.get('/dasbord',DasbordWeb)
 
 //middleware login logout
 app.use(UserAuth)

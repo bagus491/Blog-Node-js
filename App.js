@@ -1,14 +1,13 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const UsersRouter = require('./src/Router/UsersRouter')
 
 
 
 
-app.get('/', (req,res) => {
-    res.send('hello world')
-})
-
+// usersRouter
+app.use(UsersRouter)
 
 
 // pembatasan

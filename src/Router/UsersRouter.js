@@ -1,11 +1,14 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordUpdate,ReadBlog,GetOneSearch} = require('../Controllers/UsersControllers')
+const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,GetOneSearch} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
+//post
+const {doAddPost} = require('../Controllers/PostController')
 
-
+//check
+const {checkToken} = require('../utils/verify')
 
 //path
 const path = require('path')
@@ -15,16 +18,11 @@ app.set('views',path.join(__dirname, '../views'))
 app.use(express.static(path.join(__dirname, '../public')))
 
 
-// jsonweb token
-const jwt = require('jsonwebtoken')
-const secret = '!@%$DDZAW12456ASC3$^&'
-
 //multer
 const multer = require('multer')
 const Upload = multer({dest: 'uploads/'})
 
-//model POSTS
-const Posts = require('../model/Posts')
+
 
 //middleware uploads
 // kenapa gak ada namanayA? karena ada uploads di dalam databasenye atau req.file.pathnya
@@ -33,71 +31,69 @@ app.use(express.static(path.join(__dirname, '../../')))
 
 
 
-//middleware token
+// middleware token
 app.use('/dasbord',(req,res,next) => {
-    const token = req.headers.authorization || req.cookies.token
-    if(token){
-        try{
-            const decoded = jwt.verify(token,secret)
-            req.Username = decoded
-            next()
-        }catch{
-            res.redirect('/login')
-        }
-       
-    }else{
-        res.redirect('/login')
+    //checkSession
+    const User = req.session.user
+
+    if(!User)
+    {
+        return res.redirect('/login')
     }
+
+    const token = req.cookies.auth_token
+    if(!token)
+    {
+        return res.redirect('/login')
+    }
+
+    const checked = checkToken(token)
+    if(!checked)
+    {
+        return res.redirect('/login')
+    }
+
+    next()
 })
 
 
 //get
 // homeWEB
-app.get('/',HomeWeb)
+app.get('/',HomeWebView)
 // LoginWeb
-app.get('/login',LoginWeb)
+app.get('/login',LoginWebView)
 //registerWeb
-app.get('/register',RegisterWeb)
+app.get('/register',RegisterWebView)
+
+
+
 //dasbordweb
-app.get('/dasbord',DasbordWeb)
+app.get('/dasbord',DasbordWebView)
 //dasbordpost
-app.get('/dasbord/addpost',DasbordPost)
+app.get('/dasbord/addpost',DasbordPostView)
+//post
+app.post('/dasbord/addpost',Upload.single('Avatar'),doAddPost)
+
 // updateposts
-app.get('/dasbord/updatepost/:id',DasbordUpdate)
+app.get('/dasbord/updatepost/:id',DasbordUpdateView)
+
+
 //readblog
-app.get('/readblog/:id',ReadBlog)
+app.get('/readblog/:id',ReadBlogView)
+
+
+
+
 
 // search
 app.get('/searchpost', GetOneSearch)
 
-//post
-app.post('/addpost',Upload.single('Avatar'),(req,res) => {
-   const token = req.cookies.token
-   const ImageUrl = req.file.path
-   const {Title,Preparagraf,Paragraf,Author} = req.body
-   const DatePosts = new Date()
-   if(token){
-     Posts.insertMany(
-        {
-            Title,
-            Preparagraf,
-            Paragraf,
-            Avatar: ImageUrl,
-            DatePosts,
-            Author,
-        }
-     ).then((err,result)=>{
-        res.redirect('/dasbord')
-     })
-   }else{
-    res.redirect('/login')
-   }
-})
+
 
 
 
 //updatepost
-app.put('/updatepost',Upload.single('Avatar'),(req,res) => {
+app.put('/dasbord/updatepost',Upload.single('Avatar'),(req,res) => {
     const token = req.cookies.token
     const imageUrl = req.file.path
     const {Title,Preparagraf,Paragraf,Author} = req.body
@@ -126,7 +122,7 @@ app.put('/updatepost',Upload.single('Avatar'),(req,res) => {
 })
 
 //delete
-app.delete('/dasbord', (req,res) => {
+app.delete('/dasbord/deletepost', (req,res) => {
     const {_id} = req.body
    try{
     Posts.deleteOne({_id})

@@ -1,8 +1,10 @@
 const mongoose = require('mongoose')
 
-
-const posts = mongoose.model('posts', 
-{
+const SchemaPosts = new mongoose.Schema({
+    username: {
+        type: String,
+        require: true
+    },
     Title: {
         type: String,
         require: true
@@ -27,8 +29,13 @@ const posts = mongoose.model('posts',
         type: String,
         require: true
     },
-}
-)
+    Slug: {
+        type:String,
+        require:true
+    }
+})
+
+const posts = mongoose.model('posts', SchemaPosts)
 
 
 module.exports = posts

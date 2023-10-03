@@ -1,11 +1,9 @@
-//model POSTS
-const Posts = require('../model/Posts')
-
+const {getPosts,getPost,} = require('../utils/flowdb')
 
 
 //homeweb
-const HomeWeb = async (req,res) => {
-    const getPost = await Posts.find()
+const HomeWebView = async (req,res) => {
+    const getPost = await getPosts()
     try{
        res.render('home', {
         title:'halaman/home',
@@ -13,7 +11,7 @@ const HomeWeb = async (req,res) => {
         getPost
        })
 }catch(err){
-        console.log(err)
+       res.status(500).send({msg : 'Internal Server Error'})
     }
 }
 
@@ -37,82 +35,85 @@ const GetOneSearch = async (req,res) => {
 }
 
 //readblog
-const ReadBlog = async (req,res) => {
-    const getPost = await Posts.findOne({_id: req.params.id})
+const ReadBlogView = async (req,res) => {
+    const slug = req.params.slug
+    const getOne = getPost(slug)
     try{
         res.render('readblog', {
             title:'halaman/readblog',
             layout: 'main-layouts/main-layouts',
-            getPost
+            getPost: getOne
         })
-    }catch{
+    }catch(err){
         res.send('gagal')
     }
 }
 
 //LoginWeb
-const LoginWeb = (req,res) => {
+const LoginWebView = (req,res) => {
     try{
         res.render('login', {
             title: 'halaman/login',
-            layout: 'login.ejs'
+            layout: 'login.ejs',
+            msg: req.flash('msg')
         })
-    }catch{
+    }catch(err){
         res.send('gagal')
     }
 }
 
 //registerweb
-const RegisterWeb =  (req,res) => {
+const RegisterWebView =  (req,res) => {
     try{
        res.render('register', {
         title: 'halaman/register',
         layout: 'register.ejs'
        })
-    }catch{
+    }catch(err){
         res.send('gagal')
     }
 }
 
 //dasbord
-const DasbordWeb = async (req,res) => {
-    const getPosts = await Posts.find()
+const DasbordWebView = async (req,res) => {
+    const getMany = await getPosts()
     try{
         res.render('dasbord', {
             title: 'halaman/dasbord',
             layout: 'dasbord.ejs',
-            getPosts
+            getPosts: getMany
         })
-    }catch{
+    }catch(err){
         res.send('gagal')
     }
 }
 
 //dasbordpost 
-const DasbordPost = (req,res) => {
+const DasbordPostView = (req,res) => {
     try{
         res.render('addpost', {
             title: 'halaman/addpost',
             layout: 'addpost.ejs'
         })
-    }catch{
+    }catch(err){
         res.send('gagal')
     }
 }
 
 //updatepost
-const DasbordUpdate = async (req,res) => {
-    const getPost = await Posts.findOne({_id: req.params.id})
+const DasbordUpdateView = async (req,res) => {
+    const slug = req.params.slug
+    const getOne = getPost(slug)
     try{
         res.render('updatepost', {
             title: 'halaman/updateposts',
             layout: 'updatepost.ejs',
-            getPost
+            getPost: getOne
         })
-    }catch{
+    }catch(err){
         res.send('gagal')
     }
 }
 
 
-module.exports = {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordPost,DasbordUpdate,ReadBlog,GetOneSearch}
+module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,GetOneSearch}

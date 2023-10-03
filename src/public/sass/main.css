@@ -1,9 +1,19 @@
 .for-login {
-  height: 500px;
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: flex-end;
 }
 .for-login .card {
+  background: #EEEEEE;
+}
+
+.for-register {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.for-register .card {
   background: #EEEEEE;
 }/*# sourceMappingURL=main.css.map */

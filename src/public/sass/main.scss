@@ -3,7 +3,18 @@ $secondary-color: #A1CCD1;
 
 
 .for-login {
-    height: 500px;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    .card {
+        background: $primary-color;
+    }
+}
+
+.for-register
+{
+    height: 80vh;
     display: flex;
     justify-content: center;
     align-items: flex-end;

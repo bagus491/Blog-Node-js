@@ -2,10 +2,13 @@ const express = require('express')
 const app = express()
 
 //validator 
-const {body ,validationResult} = require('express-validator')
+const {validationResult} = require('express-validator')
 
-//model users
-const Users = require('../model/Users')
+//verify.js
+const {checkToken,jwt,secret,verifyData} = require('../utils/verify')
+
+//flowdb
+const {addUserSchema,getUser} = require('../utils/flowdb')
 
 //view engine
 const path = require('path')
@@ -15,81 +18,119 @@ app.set('views',path.join(__dirname, '../views'))
 const bycrpt = require('bcrypt')
 const salt = bycrpt.genSaltSync(10)
 
-//jsonwebtoken
-const jwt = require('jsonwebtoken')
-const secret = '!@%$DDZAW12456ASC3$^&'
+//passport
+const passport = require('passport')
+const LocalPassport = require('passport-local').Strategy
 
-//cookie-parser
-const cookieparser = require('cookie-parser')
-app.use(cookieparser('secret'))
+//url
 
-app.post('/register', [
-    body('Username').custom(async (value) => {
-        const duplikat = await Users.findOne({Username: value})
-        if(duplikat){
-            throw new Error('Username Telah Tersedia')
-        }else{
-            return true
+
+passport.use(new LocalPassport({usernameField: 'username'}, async(username,password,done) => {
+    try{
+        //checkUser
+        const CheckUser = await getUser(username)
+        if(!CheckUser){
+            return done(null,false,{message: 'username not valid'})
         }
-    }),
-    body('Password').isLength({min: 5}).withMessage('Panjang Password minimal 5'),
-    body('Email').isEmail().withMessage('Email Tidak Valid')
-],(req,res) => {
-    const error = validationResult(req)
-    const {Username,Password,Email} = req.body
-    if(!error.isEmpty()){
-        res.render('register',{
-            title: 'halaman/login',
-            layout: 'login.ejs',
-            error: error.array()
-        })
-    }else{
-        Users.insertMany(
+
+        //checkPassword
+        const validPass = bycrpt.compareSync(password,CheckUser.password)
+        if(!validPass){
+            return done(null,false,{message:'password not valid'})
+        }
+
+
+        // if lolos
+        return done(null,CheckUser)
+    }catch(error){
+        return done(null,error)
+    }
+}))
+
+passport.serializeUser((CheckUser,done) => {
+         done(null,CheckUser.username)
+})
+
+passport.deserializeUser(async (username,done) =>{
+    try{
+        const CheckUser = await getUser(username)
+        if(!CheckUser){
+            return done(null,CheckUser)
+        }
+    }catch(error){
+        return done(null,error)
+    }
+})
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+const doRegister = async (req,res) =>{
+    try{
+        const error = validationResult(req)
+        const {username,password,Email} = req.body
+
+        if(!error.isEmpty()){
+            return res.render('register',{
+                title: 'halaman/login',
+                layout: 'register.ejs',
+                error: error.array()
+            })
+        }
+
+        // bcrypt
+        let newPass = bycrpt.hashSync(password,salt)
+
+        //role
+        let Role = 'member'
+
+        const postUser = await addUserSchema(username,newPass,Email,Role)
+
+        const saveUser = await postUser.save()
+
+        if(!saveUser)
+        {
+            req.flash('msg','unpexted error')
+            return res.redirect('/register')
+        }
+
+        req.flash('msg','success register')
+        res.redirect('/login')
+    }catch(error){
+        res.status(500).send({msg:'internal Server Error'})
+    }
+}
+
+app.post('/register',verifyData,doRegister)
+
+
+// do login
+const doLogin = (req,res) => {
+    try{
+        const {username} = req.body
+
+        jwt.sign({username},secret,{expiresIn: '1h'},async (err,token) => {
+            if(err)return res.status(401).send({msg:'internal Server Error'});
+
+            const User = await getUser(username)
+
+            if(!User)
             {
-                Username,
-                Password: bycrpt.hashSync(Password,salt),
-                Email,
+                return res.status(401).send({msg:'internal Server Error'});
             }
-        ).then((err,result) => {
-            res.redirect('/login')
-        })
-    }
-})
+            
+            req.session.user = username;
+            req.session.role = User.Role
+            res.cookie('auth_token',token,{httpOnly:true})
+            res.redirect('/dasbord')
 
-app.post('/login', [
-    body('Username').custom(async (value) => {
-        const getName = await Users.findOne({Username: value})
-        if(!getName){
-            throw new Error('Username Tidak ditemukan')
-        }else{
-            return true
-        }
-    }),
-], async (req,res) => {
-    const error = validationResult(req)
-    const {Username,Password,Email} = req.body
-    if(!error.isEmpty()){
-        res.render('login',{
-            title: 'halaman/login',
-            layout: 'login.ejs',
-            error: error.array()
         })
-    }else{
-        const dataOk = await Users.findOne({Username})
-        if(dataOk){
-            const PassOk = bycrpt.compareSync(Password,dataOk.Password)
-            if(PassOk){
-                jwt.sign({Username: dataOk.Username},secret,{expiresIn: '1h'}, (err,token) => {
-                    if(err) throw new err;
-                    res.cookie('token',token)
-                    res.redirect('/dasbord')
-                })
-            }else{
-                  res.redirect('/login')
-            }
-        }
+    }catch(error){
+        res.status(500).send({msg:'internal Server Error'})
     }
-})
+} 
 
+app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}),doLogin)
 
 module.exports = app

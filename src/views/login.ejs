@@ -13,18 +13,26 @@
             <div class="card-body">
               <h5 class="card-title">LoginBox</h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">* isi dengan benar</h6>
+              <% if (msg.length != 0) { %>
+                <div class="alert alert-success" role="alert">
+                  <%= msg %>
+                  </div>
+              <% } %>
+
               <form method="post" action="/login">
                 <div class="mb-3">
-                  <label for="Username" class="form-label">Username</label>
-                  <input type="text" class="form-control" id="Username" name="Username" required>
+                  <label for="username" class="form-label">username</label>
+                  <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="mb-3">
-                    <label for="Password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="Password" name="Password" required>
+                    <label for="password" class="form-label">password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
                   </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
+
               <br>
+              <a href="/" class="btn btn-primary">Back</a>
             <a href="/register" class="btn btn-success">Register</a>
             </div>
           </div>

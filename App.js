@@ -6,10 +6,6 @@ const UsersRouter = require('./src/Router/UsersRouter')
 // database
 require('./src/db/db')
 
-//middleware view engine
-const mainlayouts = require('express-ejs-layouts')
-app.set('view engine', 'ejs')
-app.use(mainlayouts)
 
 //addon
 const morgan = require('morgan')

@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,GetOneSearch} = require('../Controllers/UsersControllers')
+const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,GetOneSearch,DasbordMyPosts} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //post
@@ -13,6 +13,13 @@ const {checkToken} = require('../utils/verify')
 //path
 const path = require('path')
 app.set('views',path.join(__dirname, '../views'))
+
+
+
+//middleware view engine
+const mainlayouts = require('express-ejs-layouts')
+app.set('view engine', 'ejs')
+app.use(mainlayouts)
 
 //public file
 app.use(express.static(path.join(__dirname, '../public')))
@@ -29,17 +36,19 @@ const Upload = multer({dest: 'uploads/'})
 app.use(express.static(path.join(__dirname, '../../')))
 
 
+//getUser
+const {getUser} = require('../utils/flowdb')
 
 
 // middleware token
-app.use('/dasbord',(req,res,next) => {
+app.use('/dasbord',async (req,res,next) => {
     //checkSession
-    const User = req.session.user
+    // const User = req.session.user
 
-    if(!User)
-    {
-        return res.redirect('/login')
-    }
+    // if(!User)
+    // {
+    //     return res.redirect('/login')
+    // }
 
     const token = req.cookies.auth_token
     if(!token)
@@ -52,6 +61,17 @@ app.use('/dasbord',(req,res,next) => {
     {
         return res.redirect('/login')
     }
+
+    // checkUser
+    const CheckUser = await getUser(checked)
+
+    if(!CheckUser)
+    {
+        return res.redirect('/login')
+    }
+
+    req.session.role = CheckUser.Role
+    req.session.user = CheckUser.username
 
     next()
 })
@@ -73,6 +93,7 @@ app.get('/dasbord',DasbordWebView)
 app.get('/dasbord/addpost',DasbordPostView)
 //post
 app.post('/dasbord/addpost',Upload.single('Avatar'),doAddPost)
+app.get('/dasbord/myposts',DasbordMyPosts)
 
 // updateposts
 app.get('/dasbord/updatepost/:id',DasbordUpdateView)

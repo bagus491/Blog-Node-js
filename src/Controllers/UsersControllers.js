@@ -76,15 +76,31 @@ const RegisterWebView =  (req,res) => {
 
 //dasbord
 const DasbordWebView = async (req,res) => {
-    const getMany = await getPosts()
     try{
-        res.render('dasbord', {
+        const Role = req.session.role
+        const User = req.session.user
+        res.render('main_dasbord', {
             title: 'halaman/dasbord',
-            layout: 'dasbord.ejs',
-            getPosts: getMany
+            layout: 'main-layouts/main',  
+            Role ,
+            User
         })
     }catch(err){
         res.send('gagal')
+    }
+}
+
+//mypost
+const DasbordMyPosts = async (req,res) => {
+    const getMany = await getPosts()
+    try{
+        res.render('mypost_dasbord',{
+            title: 'halaman/myposts',
+            layout: 'main-layouts/main.ejs',
+            getPosts: getMany
+        })
+    }catch(err){
+        res.send('gaga;')
     }
 }
 
@@ -93,7 +109,7 @@ const DasbordPostView = (req,res) => {
     try{
         res.render('addpost', {
             title: 'halaman/addpost',
-            layout: 'addpost.ejs'
+            layout: 'main-layouts/main.ejs'
         })
     }catch(err){
         res.send('gagal')
@@ -116,4 +132,4 @@ const DasbordUpdateView = async (req,res) => {
 }
 
 
-module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,GetOneSearch}
+module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,GetOneSearch,DasbordMyPosts}

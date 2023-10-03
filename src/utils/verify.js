@@ -6,7 +6,7 @@ const secret = '!@%$DDZAW12456ASC3$^&'
 
 const checkToken = (token) => {
     try{
-       return jwt.verify(token,secret,async(err,decoded) => {
+       return jwt.verify(token,secret,(err,decoded) => {
             if(err)return false;
 
             const decodedUser = decoded.username

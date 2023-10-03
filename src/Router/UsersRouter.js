@@ -4,11 +4,8 @@ const app = express()
 const {HomeWeb,LoginWeb,RegisterWeb,DasbordWeb,DasbordPost,DasbordUpdate,ReadBlog,GetOneSearch} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
-//middleware bodyparser
-const bodyparser = require('body-parser')
-app.set(bodyparser.urlencoded({extended: false}))
-app.use(bodyparser.json())
-app.use(express.urlencoded({extended: true}))
+
+
 
 //path
 const path = require('path')
@@ -16,10 +13,6 @@ app.set('views',path.join(__dirname, '../views'))
 
 //public file
 app.use(express.static(path.join(__dirname, '../public')))
-
-// middleware penting jika ingin memakai middleware token sebagai pembatasan
-const cookieparser = require('cookie-parser')
-app.use(cookieparser('secret'))
 
 
 // jsonweb token
@@ -38,9 +31,7 @@ const Posts = require('../model/Posts')
 app.use(express.static(path.join(__dirname, '../../')))
 
 
-//middleware method-override
-const methodOverride = require('method-override')
-app.use(methodOverride('_method'))
+
 
 //middleware token
 app.use('/dasbord',(req,res,next) => {

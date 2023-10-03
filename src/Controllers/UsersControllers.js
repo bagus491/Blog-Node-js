@@ -37,11 +37,11 @@ const GetOneSearch = async (req,res) => {
 //readblog
 const ReadBlogView = async (req,res) => {
     const slug = req.params.slug
-    const getOne = getPost(slug)
+    const getOne = await getPost(slug)
     try{
-        res.render('readblog', {
+        res.render('dasbord-readblog', {
             title:'halaman/readblog',
-            layout: 'main-layouts/main-layouts',
+            layout: 'main-layouts/main',
             getPost: getOne
         })
     }catch(err){
@@ -93,11 +93,14 @@ const DasbordWebView = async (req,res) => {
 //mypost
 const DasbordMyPosts = async (req,res) => {
     const getMany = await getPosts()
+    const User = req.session.user
+    const posts = getMany.filter((e) => e.username === User)
     try{
         res.render('mypost_dasbord',{
             title: 'halaman/myposts',
             layout: 'main-layouts/main.ejs',
-            getPosts: getMany
+            getPosts: posts,
+            msg : req.flash('msg')
         })
     }catch(err){
         res.send('gaga;')
@@ -109,7 +112,7 @@ const DasbordPostView = (req,res) => {
     try{
         res.render('addpost', {
             title: 'halaman/addpost',
-            layout: 'main-layouts/main.ejs'
+            layout: 'main-layouts/main.ejs',
         })
     }catch(err){
         res.send('gagal')

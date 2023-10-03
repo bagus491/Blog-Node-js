@@ -5,7 +5,7 @@ const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,D
 //auth
 const UserAuth = require('../auth/Auth')
 //post
-const {doAddPost} = require('../Controllers/PostController')
+const {doAddPost,doDeletePost} = require('../Controllers/PostController')
 
 //check
 const {checkToken} = require('../utils/verify')
@@ -31,6 +31,7 @@ const Upload = multer({dest: 'uploads/'})
 
 
 
+
 //middleware uploads
 // kenapa gak ada namanayA? karena ada uploads di dalam databasenye atau req.file.pathnya
 app.use(express.static(path.join(__dirname, '../../')))
@@ -43,12 +44,6 @@ const {getUser} = require('../utils/flowdb')
 // middleware token
 app.use('/dasbord',async (req,res,next) => {
     //checkSession
-    // const User = req.session.user
-
-    // if(!User)
-    // {
-    //     return res.redirect('/login')
-    // }
 
     const token = req.cookies.auth_token
     if(!token)
@@ -93,6 +88,7 @@ app.get('/dasbord',DasbordWebView)
 app.get('/dasbord/addpost',DasbordPostView)
 //post
 app.post('/dasbord/addpost',Upload.single('Avatar'),doAddPost)
+// allpost
 app.get('/dasbord/myposts',DasbordMyPosts)
 
 // updateposts
@@ -100,7 +96,7 @@ app.get('/dasbord/updatepost/:id',DasbordUpdateView)
 
 
 //readblog
-app.get('/readblog/:id',ReadBlogView)
+app.get('/dasbord/detail/:slug',ReadBlogView)
 
 
 
@@ -143,17 +139,7 @@ app.put('/dasbord/updatepost',Upload.single('Avatar'),(req,res) => {
 })
 
 //delete
-app.delete('/dasbord/deletepost', (req,res) => {
-    const {_id} = req.body
-   try{
-    Posts.deleteOne({_id})
-        .then((err,result) => {
-            res.redirect('/dasbord')
-        })
-   }catch{
-    res.redirect('/dasbord')
-   }
-})
+app.delete('/dasbord/delete', doDeletePost)
 
 //logoutweb
 app.get('/logout',(req,res) => {

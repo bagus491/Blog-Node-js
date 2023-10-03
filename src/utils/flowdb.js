@@ -16,19 +16,19 @@ const getPosts = async () => {
 }
 
 
-const getPost = async (slug) => {
+const getPost = async (Slug) => {
     try{
-        return await Posts.findOne({slug})
+        return await Posts.findOne({Slug})
     }catch(error){
         return false
     }
 }
 
 
-const addSchema = (user_id,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug) => {
+const addSchema = (username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug) => {
     try{
         return new Posts({
-            user_id,
+            username,
             Title,
             Preparagraf,
             Paragraf,
@@ -42,6 +42,14 @@ const addSchema = (user_id,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Sl
     }
 }
 
+
+const deletePost = async (_id) => {
+    try{
+        return await Posts.deleteOne({_id})
+    }catch(error){
+        return false
+    }
+}
 
 // getUser
 
@@ -66,4 +74,4 @@ const addUserSchema = async(username,password,Email,Role) =>{
     }
 }
 
-module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser}
+module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser,deletePost}

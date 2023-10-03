@@ -1,21 +1,24 @@
-const {addSchema,getPost} = require('../utils/flowdb')
+const {addSchema,getPost,deletePost} = require('../utils/flowdb')
 
 //verify
 const {checkToken} = require('../utils/verify')
 
 const doAddPost = async (req,res) =>{
     try{
-        const token = req.cookies.token
+
+        
+        const token = req.cookies.auth_token
         const ImageUrl = req.file.path
         const {Title,Paragraf,Author} = req.body
         const DatePosts = new Date()
 
+      
         if(!token)
         {
             return res.status(401).redirect('/login')
         }
 
-        const verify = checkToken(token)
+        const verify = await checkToken(token)
 
         if(!verify)
         {
@@ -25,11 +28,15 @@ const doAddPost = async (req,res) =>{
         //make paragraf array
         const splitParagraf = Paragraf.split('')
 
-        const Preparagraf = splitParagraf.slice(0,50)
+        let  Preparagraf = splitParagraf.slice(0,50)
+
+        let newpreparagraf = Preparagraf.join('')
+
+
 
 
         //slug
-        const TitleSplit = Title.split('')
+        const TitleSplit = Title.split(' ')
 
         if(TitleSplit.length > 0)
         {
@@ -41,14 +48,16 @@ const doAddPost = async (req,res) =>{
                 let getLast = splitmap[splitmap.length - 1]
                 let polaLast = getLast.split('')
                 delete polaLast[polaLast.length - 1]
+                console.log(polaLast)
                 
                 let beforeSlug = splitmap.filter((e) => e !== getLast)
                 
                 let Slug = beforeSlug.join('') + polaLast.join('')
 
-                const submitPost = await addSchema(verify,Title,Preparagraf,Paragraf,Author,DatePosts,Slug)
 
-                const savePost = await submitPost()
+                const submitPost = await addSchema(verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug)
+
+                const savePost = await submitPost.save()
 
                 if(!savePost)
                 {
@@ -57,13 +66,13 @@ const doAddPost = async (req,res) =>{
                 }
 
                 req.flash('msg','sucess add Post')
-                return res.redirect('/dasbord/listpost')
+                return res.redirect('/dasbord/myposts')
 
         }
 
-             const submitPost = addSchema(verify,Title,Preparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug = Title)
+             const submitPost = await addSchema(verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug)
 
-                const savePost = await submitPost()
+                const savePost = await submitPost.save()
 
                 if(!savePost)
                 {
@@ -72,9 +81,29 @@ const doAddPost = async (req,res) =>{
                 }
 
                 req.flash('msg','sucess add Post')
-                res.redirect('/dasbord/listpost')
+                res.redirect('/dasbord/myposts')
 
 
+    }catch(error){
+        res.status(500).send({msg:'internal Server Error'})
+    }
+}
+
+//deletePost
+const doDeletePost = async(req,res) =>{
+    try{
+        const {_id} = req.body
+
+        const deleted = await deletePost(_id)
+
+        if(!deleted)
+        {
+            res.redirect('/dasbord/myposts')
+            return res.status(401)
+        }
+
+        req.flash('msg','success delete')
+        res.redirect('/dasbord/myposts')
     }catch(error){
         res.status(500).send({msg:'internal Server Error'})
     }
@@ -83,4 +112,4 @@ const doAddPost = async (req,res) =>{
 
 
 
-module.exports = {doAddPost}
+module.exports = {doAddPost,doDeletePost}

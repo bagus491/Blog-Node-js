@@ -4,4 +4,40 @@
 
 <div class="container">
     <a href="/dasbord/addpost" class="btn btn-primary">Create Post</a>
+    <br><br>
+    <% if (msg.length != 0) { %>
+        <div class="alert alert-success" role="alert">
+          <%= msg %>
+          </div>
+      <% } %>
+    <br><br>
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-primary">
+                <thead>
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Judul</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% getPosts.forEach((post,i) => { i++ %>
+                     <tr>
+                        <td><%= i %></td>
+                        <td><%= post.Title %></td>
+                        <td>
+                            <a href="/dasbord/detail/<%= post.Slug %>" class="btn btn-success badge rounded-flip">detail</a>
+                            <form action="/dasbord/delete?_method=DELETE" class="d-inline" method="post">
+                                <input type="hidden" name="_id" value="<%= post._id %>">
+                                <button type="submit" class="btn btn-danger badge rounded-flip" onclick="return confirm('really?')">Delete</button>
+                            </form>
+                            <a href="/dasbord/update/<%= post.Slug %>" class="btn btn-primary badge rounded-flip">update</a>
+                        </td>
+                     </tr>
+                    <% }) %>
+                </tbody>
+              </table>
+        </div>
+    </div>
 </div>

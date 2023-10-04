@@ -4,29 +4,55 @@ const {getPosts,getPost,getUsers,getCategories} = require('../utils/flowdb')
 //homeweb
 const HomeWebView = async (req,res) => {
     try{
-        const search = req.query.search_query
-        const getMany = await getPosts()
+        let search = req.query.search_query
+        let getMany = await getPosts()
+        let page = req.query.page
+        let lock = false
+
+        // pagination
+        let jmlhperHalaman = 5;
+        let panjangData = getMany.length;
+        let jmlhHalaman = Math.ceil(panjangData / jmlhperHalaman)
+        let awalData = page || 1;
+
+        let DefaultPage = (awalData - 1) * jmlhperHalaman
+        let lastPage = DefaultPage + jmlhperHalaman
+        getMany = getMany.slice(DefaultPage,lastPage)
         if(search === '')
         {
             return res.redirect('/')
         }
-
+        
         if(search)
         {
-            const filterPosts = getMany.filter((e) => e.Title.toLowerCase().includes(search.toLowerCase()))
-            
+            let filterPosts = getMany.filter((e) => e.Title.toLowerCase().includes(search.toLowerCase()) || e.Paragraf.toLowerCase().includes(search.toLowerCase()))
+              // pagination
+         jmlhperHalaman = 1;
+         panjangData = filterPosts.length;
+         jmlhHalaman = Math.ceil(panjangData / jmlhperHalaman)
+         awalData = page  || 1
+
+         DefaultPage = (awalData - 1) * jmlhperHalaman
+         lastPage = DefaultPage + jmlhperHalaman
+        filterPosts = filterPosts.slice(DefaultPage,lastPage)
+        lock = true
 
             return    res.render('home', {
                 title:'halaman/home',
                 layout: 'main-layouts/main-layouts',
-                getPost: filterPosts
+                getPost: filterPosts,
+                jmlhHalaman,
+                lock,
+                search
                })
         }
 
        res.render('home', {
         title:'halaman/home',
         layout: 'main-layouts/main-layouts',
-        getPost: getMany
+        getPost: getMany,
+        jmlhHalaman,
+        lock
        })
 }catch(err){
        res.status(500).send({msg : 'Internal Server Error'})

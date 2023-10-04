@@ -1,7 +1,84 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1>Welcome, <%= User %></h1>
+  <h1>Welcome, <%= User %>,Status: <%= Role %></h1>
 </div>
 
 <% if (Role == 'admin') { %>
- <h1>hello admin</h1>
+  <div class="posts-box d-flex">
+    <h1>list Posts</h1>
+    
+    <div class="box-form" style="margin-left: 15px; margin-top: 10px;">
+      <form class="d-flex"  action="/dasbord" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search Post" aria-label="Search" name="search_query">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+        <table class="table table-primary">
+            <thead>
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Judul</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% getPosts.forEach((post,i) => { i++ %>
+                 <tr>
+                    <td><%= i %></td>
+                    <td><%= post.Title %></td>
+                    <td>
+                        <a href="/dasbord/detail/<%= post.Slug %>" class="btn btn-success badge rounded-flip">detail</a>
+                    </td>
+                 </tr>
+                <% }) %>
+                <% if (getPosts.length === 0) { %>
+                  <tr>
+                    <td colspan="4">
+                      <div class="alert alert-warning" role="alert">
+                        Not Found
+                      </div>
+                    </td>
+                  </tr>
+                <% } %>
+            </tbody>
+          </table>
+    </div>
+  </div>
+
+
+  <div class="posts-box d-flex">
+    <h1>list Users</h1>
+    
+    <div class="box-form" style="margin-left: 15px; margin-top: 10px;">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search User" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-8">
+        <table class="table table-success">
+            <thead>
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">User</th>
+                <th scope="col">Role</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% Users.forEach((User,i) => { i++ %>
+                 <tr>
+                    <td><%= i %></td>
+                    <td><%= User.username %></td>
+                    <td><%= User.Role %></td>
+                 </tr>
+                <% }) %>
+            </tbody>
+          </table>
+    </div>
+  </div>
 <% } %>

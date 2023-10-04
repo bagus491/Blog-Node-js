@@ -1,4 +1,4 @@
-const {getPosts,getPost,} = require('../utils/flowdb')
+const {getPosts,getPost,getUsers,} = require('../utils/flowdb')
 
 
 //homeweb
@@ -15,24 +15,6 @@ const HomeWebView = async (req,res) => {
     }
 }
 
-//getoneSearch
-const GetOneSearch = async (req,res) => {
-    const search = req.query.search
-    const getPost = await Posts.findOne({Title: search})
-    if(getPost){
-        try{
-            res.render('homesearch', {
-             title:'halaman/home',
-             layout: 'main-layouts/main-layouts',
-             getPost
-            })
-     }catch(err){
-             console.log(err)
-         }
-    }else{
-        res.redirect('/')
-    }
-}
 
 //readblog
 const ReadBlogView = async (req,res) => {
@@ -77,13 +59,40 @@ const RegisterWebView =  (req,res) => {
 //dasbord
 const DasbordWebView = async (req,res) => {
     try{
+        const search = req.query.search_query
         const Role = req.session.role
         const User = req.session.user
+        const getMany = await getPosts()
+        const Users = await getUsers()
+
+        if(search === '')
+        {
+            return res.redirect('/dasbord')
+        }
+
+        if(search)
+        {
+            const filterPosts = getMany.filter((e) => e.Title.toLowerCase().includes(search.toLowerCase()))
+            console.log(filterPosts)
+
+            return  res.render('main_dasbord', {
+                title: 'halaman/dasbord',
+                layout: 'main-layouts/main',  
+                Role ,
+                User,
+                getPosts: filterPosts,
+                Users
+            })
+        }
+
+
         res.render('main_dasbord', {
             title: 'halaman/dasbord',
             layout: 'main-layouts/main',  
             Role ,
-            User
+            User,
+            getPosts: getMany,
+            Users
         })
     }catch(err){
         res.send('gagal')
@@ -135,4 +144,4 @@ const DasbordUpdateView = async (req,res) => {
 }
 
 
-module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,GetOneSearch,DasbordMyPosts}
+module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts}

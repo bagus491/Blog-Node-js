@@ -61,6 +61,16 @@ const getUser = async (username) =>{
     }
 }
 
+//getUsers
+
+const getUsers = async () => {
+    try{
+        return await Users.find()
+    }catch(error){
+        return false
+    }
+}
+
 const addUserSchema = async(username,password,Email,Role) =>{
     try{
         return new Users({
@@ -74,4 +84,4 @@ const addUserSchema = async(username,password,Email,Role) =>{
     }
 }
 
-module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser,deletePost}
+module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser,deletePost,getUsers}

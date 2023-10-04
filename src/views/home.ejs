@@ -1,15 +1,16 @@
 <div class="container">
-    <br>
-    <div class="content-blog" style="display: flex; justify-content: center; flex-wrap: wrap;">
-        <%  getPost.forEach(e => { %>
-            <div class="card" style="width: 60%; margin-top: 20px;">
-                <img src="<%= e.Avatar %>" class="card-img-top" alt="foto" style="height: 350px;">
-                <div class="card-body">
-                  <h5 class="card-title"><%= e.Title %></h5>
-                  <p class="card-text"><%= e.Preparagraf %></p>
-                  <a href="/readblog/<%= e._id %>" class="btn btn-primary">Baca Artikel</a>
-                </div>
-              </div>
-        <% }) %>
-    </div>
+  <br>
+  <div class="content-blog" style="display: flex; flex-wrap: wrap;">
+      <%  getPost.forEach(e => { %>
+        <div class="card" style="width: 18rem; margin-left: 10px;">
+          <img src="<%= e.Avatar %>" class="card-img-top img-flui" alt="<%= e.Slug %>" style="height: 300px;" >
+          <div class="card-body">
+            <h5 class="card-title"><%= e.Title %></h5>
+            <p class="card-text"><%= e.Preparagraf %></p>
+            <a href="/readblog/<%= e.Slug %>" class="btn btn-primary">Baca Artikel</a>
+          </div>
+        </div>
+
+      <% }) %>
+  </div>
 </div>

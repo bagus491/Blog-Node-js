@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts,AdminView} = require('../Controllers/UsersControllers')
+const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts,AdminView,ReadBlogDasbordView} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //post
@@ -96,7 +96,9 @@ app.get('/dasbord/update/:slug',DasbordUpdateView)
 
 
 //readblog
-app.get('/dasbord/detail/:slug',ReadBlogView)
+app.get('/dasbord/detail/:slug',ReadBlogDasbordView)
+
+app.get('/readblog/:Slug',ReadBlogView)
 
 //panel
 app.get('/dasbord/admin',AdminView)
@@ -112,7 +114,9 @@ app.delete('/dasbord/delete', doDeletePost)
 
 //logoutweb
 app.get('/logout',(req,res) => {
-    res.clearCookie('token')
+    res.clearCookie('auth_token')
+    req.session.role = ''
+    req.session.user = ''
     res.redirect('/login')
 })
 

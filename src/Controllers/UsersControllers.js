@@ -3,12 +3,30 @@ const {getPosts,getPost,getUsers,getCategories} = require('../utils/flowdb')
 
 //homeweb
 const HomeWebView = async (req,res) => {
-    const getPost = await getPosts()
     try{
+        const search = req.query.search_query
+        const getMany = await getPosts()
+        if(search === '')
+        {
+            return res.redirect('/')
+        }
+
+        if(search)
+        {
+            const filterPosts = getMany.filter((e) => e.Title.toLowerCase().includes(search.toLowerCase()))
+            
+
+            return    res.render('home', {
+                title:'halaman/home',
+                layout: 'main-layouts/main-layouts',
+                getPost: filterPosts
+               })
+        }
+
        res.render('home', {
         title:'halaman/home',
         layout: 'main-layouts/main-layouts',
-        getPost
+        getPost: getMany
        })
 }catch(err){
        res.status(500).send({msg : 'Internal Server Error'})
@@ -16,14 +34,29 @@ const HomeWebView = async (req,res) => {
 }
 
 
-//readblog
-const ReadBlogView = async (req,res) => {
+//readblog dasbord
+const ReadBlogDasbordView = async (req,res) => {
     const slug = req.params.slug
     const getOne = await getPost(slug)
     try{
         res.render('dasbord-readblog', {
             title:'halaman/readblog',
             layout: 'main-layouts/main',
+            getPost: getOne
+        })
+    }catch(err){
+        res.send('gagal')
+    }
+}
+
+// readblog
+const ReadBlogView = async (req,res) => {
+    const slug = req.params.Slug
+    const getOne = await getPost(slug)
+    try{
+        res.render('readblog', {
+            title:'halaman/readblog',
+            layout: 'main-layouts/main-layouts',
             getPost: getOne
         })
     }catch(err){
@@ -191,4 +224,4 @@ const DasbordUpdateView = async (req,res) => {
 }
 
 
-module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts,AdminView}
+module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts,AdminView,ReadBlogDasbordView}

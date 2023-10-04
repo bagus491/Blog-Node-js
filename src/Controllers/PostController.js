@@ -9,7 +9,7 @@ const doAddPost = async (req,res) =>{
         
         const token = req.cookies.auth_token
         const ImageUrl = req.file.path
-        const {Title,Paragraf,Author} = req.body
+        const {Title,Paragraf,Category,Author} = req.body
         const DatePosts = new Date()
 
       
@@ -55,7 +55,7 @@ const doAddPost = async (req,res) =>{
                 let Slug = beforeSlug.join('') + polaLast.join('')
 
 
-                const submitPost = await addSchema(verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug)
+                const submitPost = await addSchema(verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug,Category)
 
                 const savePost = await submitPost.save()
 
@@ -70,7 +70,7 @@ const doAddPost = async (req,res) =>{
 
         }
 
-             const submitPost = await addSchema(verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug)
+             const submitPost = await addSchema(verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug,Category)
 
                 const savePost = await submitPost.save()
 
@@ -168,7 +168,7 @@ const doUpdatePost = async (req,res) =>{
                 let Slug = beforeSlug.join('') + polaLast.join('')
                 
 
-                const submitPost = await updateSchema(_id,verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug)
+                const submitPost = await updateSchema(_id,verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug,Category)
 
                 if(!submitPost)
                 {
@@ -181,7 +181,7 @@ const doUpdatePost = async (req,res) =>{
 
         }
 
-             const submitPost = await updateSchema(_id,verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug)
+             const submitPost = await updateSchema(_id,verify,Title,newpreparagraf,Paragraf,Avatar = ImageUrl,DatePosts,Author,Slug,Category)
 
 
                 if(!submitPost)

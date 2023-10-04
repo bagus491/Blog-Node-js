@@ -4,6 +4,16 @@ const Posts = require('../model/Posts')
 //model users
 const Users = require('../model/Users')
 
+//model Categoirs
+const Categories = require('../model/Category')
+
+const getCategories = async () => {
+    try{
+        return await Categories.find()
+    }catch(error){
+        return false
+    }
+}
 
 //Posts
 
@@ -33,7 +43,7 @@ const getPostById = async(_id) => {
 }
 
 
-const addSchema = (username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug) => {
+const addSchema = (username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug,Category) => {
     try{
         return new Posts({
             username,
@@ -43,7 +53,8 @@ const addSchema = (username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,S
             Avatar,
             DatePosts,
             Author,
-            Slug
+            Slug,
+            Category
         })
     }catch(error){
         return false
@@ -60,7 +71,7 @@ const deletePost = async (_id) => {
 }
 
 
-const updateSchema = async (_id,username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug) => {
+const updateSchema = async (_id,username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug,Category) => {
     try{
         return await Posts.updateOne(
                 {
@@ -75,7 +86,8 @@ const updateSchema = async (_id,username,Title,Preparagraf,Paragraf,Avatar,DateP
                         Avatar,
                         DatePosts,
                         Author,
-                        Slug
+                        Slug,
+                        Category
                     }
                 }
         )
@@ -117,4 +129,4 @@ const addUserSchema = async(username,password,Email,Role) =>{
     }
 }
 
-module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser,deletePost,getUsers,updateSchema,getPostById}
+module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser,deletePost,getUsers,updateSchema,getPostById,getCategories}

@@ -12,6 +12,15 @@
                    <textarea  id="Paragraf"  name="Paragraf" style="width: 100%; height: 300px;" required><%= getPost.Paragraf %></textarea>
                  </div>
                  <div class="mb-3">
+                  <label for="Category" class="form-label">Category</label>
+                  <select class="form-select" aria-label="Default select example" name="Category">
+                    <% categories.forEach(Category => { %>
+                      <option value="<%= Category.Slug %>"><%= Category.name %></option>
+                    <% }) %>
+
+                  </select>
+                 </div>
+                 <div class="mb-3">
                   <img src="/<%= getPost.Avatar %>" alt="<%= getPost.Slug %>" width="300" class="mb-2 oldImg">
                   
                     <img class="img-perview" width="300">
@@ -19,6 +28,7 @@
                   <label for="Avatar" class="form-label">Avatar</label>
                   <input type="file" class="form-control" id="Avatar" name="Avatar" onchange="perviewImage()">
                 </div>
+                
                  <div class="mb-3">
                    <label for="Author" class="form-label">Author</label>
                    <input type="text" class="form-control" id="Author" name="Author" value="<%= getPost.Author%>" required>

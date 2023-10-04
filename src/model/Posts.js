@@ -32,6 +32,10 @@ const SchemaPosts = new mongoose.Schema({
     Slug: {
         type:String,
         require:true
+    },
+    Category:{
+        type:String,
+        require:true
     }
 })
 

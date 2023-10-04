@@ -1,4 +1,4 @@
-const {getPosts,getPost,getUsers,} = require('../utils/flowdb')
+const {getPosts,getPost,getUsers,getCategories} = require('../utils/flowdb')
 
 
 //homeweb
@@ -160,11 +160,13 @@ const DasbordMyPosts = async (req,res) => {
 }
 
 //dasbordpost 
-const DasbordPostView = (req,res) => {
+const DasbordPostView = async (req,res) => {
     try{
+        const categories = await getCategories()
         res.render('addpost', {
             title: 'halaman/addpost',
             layout: 'main-layouts/main.ejs',
+            categories
         })
     }catch(err){
         res.send('gagal')
@@ -175,11 +177,13 @@ const DasbordPostView = (req,res) => {
 const DasbordUpdateView = async (req,res) => {
     const slug = req.params.slug
     const getOne = await getPost(slug)
+    const categories = await getCategories()
     try{
         res.render('updatepost', {
             title: 'halaman/updateposts',
             layout: 'main-layouts/main',
-            getPost: getOne
+            getPost: getOne,
+            categories
         })
     }catch(err){
         res.send('gagal')

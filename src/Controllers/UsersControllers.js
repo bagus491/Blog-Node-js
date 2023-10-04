@@ -174,11 +174,11 @@ const DasbordPostView = (req,res) => {
 //updatepost
 const DasbordUpdateView = async (req,res) => {
     const slug = req.params.slug
-    const getOne = getPost(slug)
+    const getOne = await getPost(slug)
     try{
         res.render('updatepost', {
             title: 'halaman/updateposts',
-            layout: 'updatepost.ejs',
+            layout: 'main-layouts/main',
             getPost: getOne
         })
     }catch(err){

@@ -24,6 +24,14 @@ const getPost = async (Slug) => {
     }
 }
 
+const getPostById = async(_id) => {
+    try{
+        return await Posts.findOne({_id})
+    }catch(error){
+        return false
+    }
+}
+
 
 const addSchema = (username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug) => {
     try{
@@ -46,6 +54,31 @@ const addSchema = (username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,S
 const deletePost = async (_id) => {
     try{
         return await Posts.deleteOne({_id})
+    }catch(error){
+        return false
+    }
+}
+
+
+const updateSchema = async (_id,username,Title,Preparagraf,Paragraf,Avatar,DatePosts,Author,Slug) => {
+    try{
+        return await Posts.updateOne(
+                {
+                    _id: _id
+                },
+                {
+                    $set: {
+                        username,
+                        Title,
+                        Preparagraf,
+                        Paragraf,
+                        Avatar,
+                        DatePosts,
+                        Author,
+                        Slug
+                    }
+                }
+        )
     }catch(error){
         return false
     }
@@ -84,4 +117,4 @@ const addUserSchema = async(username,password,Email,Role) =>{
     }
 }
 
-module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser,deletePost,getUsers}
+module.exports = {getPosts,getPost,addSchema,addUserSchema,getUser,deletePost,getUsers,updateSchema,getPostById}

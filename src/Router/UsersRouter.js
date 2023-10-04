@@ -5,7 +5,7 @@ const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,D
 //auth
 const UserAuth = require('../auth/Auth')
 //post
-const {doAddPost,doDeletePost} = require('../Controllers/PostController')
+const {doAddPost,doDeletePost,doUpdatePost} = require('../Controllers/PostController')
 
 //check
 const {checkToken} = require('../utils/verify')
@@ -92,7 +92,7 @@ app.post('/dasbord/addpost',Upload.single('Avatar'),doAddPost)
 app.get('/dasbord/myposts',DasbordMyPosts)
 
 // updateposts
-app.get('/dasbord/updatepost/:id',DasbordUpdateView)
+app.get('/dasbord/update/:slug',DasbordUpdateView)
 
 
 //readblog
@@ -105,33 +105,7 @@ app.get('/dasbord/admin',AdminView)
 
 
 //updatepost
-app.put('/dasbord/updatepost',Upload.single('Avatar'),(req,res) => {
-    const token = req.cookies.token
-    const imageUrl = req.file.path
-    const {Title,Preparagraf,Paragraf,Author} = req.body
-    const DatePosts = new Date()
-    if(token){
-        Posts.updateMany(
-            {
-                _id: req.body._id
-            },
-            {
-                $set: {
-                    Title,
-                    Preparagraf,
-                    Paragraf,
-                    Avatar: imageUrl,
-                    DatePosts,
-                    Author,
-                }
-            }
-        ).then((err,result) => {
-            res.redirect('/dasbord')
-        })
-    }else{
-        res.redirect('/dasbord')
-    }
-})
+app.put('/dasbord/update',Upload.single('Avatar'),doUpdatePost)
 
 //delete
 app.delete('/dasbord/delete', doDeletePost)

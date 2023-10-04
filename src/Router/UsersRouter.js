@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 //UsersControllers
-const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts} = require('../Controllers/UsersControllers')
+const {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts,AdminView} = require('../Controllers/UsersControllers')
 //auth
 const UserAuth = require('../auth/Auth')
 //post
@@ -97,6 +97,9 @@ app.get('/dasbord/updatepost/:id',DasbordUpdateView)
 
 //readblog
 app.get('/dasbord/detail/:slug',ReadBlogView)
+
+//panel
+app.get('/dasbord/admin',AdminView)
 
 
 

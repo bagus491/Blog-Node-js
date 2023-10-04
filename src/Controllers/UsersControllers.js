@@ -63,7 +63,7 @@ const DasbordWebView = async (req,res) => {
         const Role = req.session.role
         const User = req.session.user
         const getMany = await getPosts()
-        const Users = await getUsers()
+
 
         if(search === '')
         {
@@ -73,7 +73,7 @@ const DasbordWebView = async (req,res) => {
         if(search)
         {
             const filterPosts = getMany.filter((e) => e.Title.toLowerCase().includes(search.toLowerCase()))
-            console.log(filterPosts)
+            
 
             return  res.render('main_dasbord', {
                 title: 'halaman/dasbord',
@@ -81,7 +81,7 @@ const DasbordWebView = async (req,res) => {
                 Role ,
                 User,
                 getPosts: filterPosts,
-                Users
+                
             })
         }
 
@@ -92,6 +92,49 @@ const DasbordWebView = async (req,res) => {
             Role ,
             User,
             getPosts: getMany,
+        })
+    }catch(err){
+        res.send('gagal')
+    }
+}
+
+const AdminView = async (req,res) => {
+    try{
+         const search = req.query.search_query
+        const Users = await getUsers()
+        const Role = req.session.role
+        const User = req.session.user
+
+    
+        if(!Role)
+        {
+            return redirect('/dasbord')
+        }
+        
+        if(search === '')
+        {
+            return res.redirect('/dasbord/admin')
+        }
+
+        if(search)
+        {
+            const filterUsers = Users.filter((e) => e.username.toLowerCase().includes(search.toLowerCase()) || e.Role.toLowerCase().includes(search.toLowerCase()))
+           
+            return res.render('panel_dasbord',{
+                title: 'halaman/admin',
+                layout: 'main-layouts/main',
+                User,
+                Role,
+                Users : filterUsers
+            })
+        }
+
+
+        res.render('panel_dasbord',{
+            title: 'halaman/admin',
+            layout: 'main-layouts/main',
+            User,
+            Role,
             Users
         })
     }catch(err){
@@ -144,4 +187,4 @@ const DasbordUpdateView = async (req,res) => {
 }
 
 
-module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts}
+module.exports = {HomeWebView,LoginWebView,RegisterWebView,DasbordWebView,DasbordPostView,DasbordUpdateView,ReadBlogView,DasbordMyPosts,AdminView}

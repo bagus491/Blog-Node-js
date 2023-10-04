@@ -5,13 +5,17 @@
 <% if (Role == 'admin') { %>
   <div class="posts-box d-flex">
     <h1>list Posts</h1>
-    
     <div class="box-form" style="margin-left: 15px; margin-top: 10px;">
       <form class="d-flex"  action="/dasbord" role="search">
         <input class="form-control me-2" type="search" placeholder="Search Post" aria-label="Search" name="search_query">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>
+
+    <div style="margin-top: 10px; margin-left: 15px;">  
+      <a href="/dasbord/admin" class="btn btn-primary">ListUsers</a>
+    </div>
+
   </div>
   <div class="row">
     <div class="col-md-8">
@@ -47,38 +51,4 @@
     </div>
   </div>
 
-
-  <div class="posts-box d-flex">
-    <h1>list Users</h1>
-    
-    <div class="box-form" style="margin-left: 15px; margin-top: 10px;">
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search User" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-md-8">
-        <table class="table table-success">
-            <thead>
-              <tr>
-                <th scope="col">No</th>
-                <th scope="col">User</th>
-                <th scope="col">Role</th>
-              </tr>
-            </thead>
-            <tbody>
-                <% Users.forEach((User,i) => { i++ %>
-                 <tr>
-                    <td><%= i %></td>
-                    <td><%= User.username %></td>
-                    <td><%= User.Role %></td>
-                 </tr>
-                <% }) %>
-            </tbody>
-          </table>
-    </div>
-  </div>
 <% } %>
